@@ -1,16 +1,15 @@
 # Dice
 
-calculate combined dice rolls
+Calculate combined dice rolls
 
     var twoDice = 
                from d1 in Random.Dice(6) 
                from d2 in Random.Dice(6) 
                select d1 + d2; 
 
-returns a data structure that know the probability for all the outcomes (2, 3, 4, ... , 11, 12)
-and allows to generate random number for that distribution
+Returns a data structure that knows the probability for all outcomes (2, 3, 4, ... , 11, 12) and allows to generate random number for that distribution
 
-the expressions can become more complicated. For example, the game zombicide has a rule where the number of ones are important (Crawlers) but only if there is another die with three or more.
+The expressions can become more complicated. For example, the game zombicide has a rule where the number of ones are important (Crawlers) but only if there are at least the same number of dice with for example three or more.
 
     var threeDiceThreePlusWithOnes = 
                  from ds in Random.Dice(6).Repeat(3) 
