@@ -8,7 +8,6 @@ namespace Statistics
     {
         public static IRandom<int> Dice(int sides)
         {
-            return new _Random<int>(Enumerable.Range(1, 6).Select(i => Probability(i, 1.0 / sides)));
         }
 
         public static IRandom<int> Coin(double pZero = 0.5)
