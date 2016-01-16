@@ -7,11 +7,8 @@ namespace Xof.RandomVariables
     {
         static void Main(string[] args)
         {
-            //var twoDice =
-            //  from d1 in 
-            //  from d2 in Random.Dice(6)
-            //  select d1 + d2;
-            Demo("two dice", Random.Dice(6).Repeat(2).Select(lst => lst.Sum()));
+            // Demo("two dice", Random.Dice(6).Repeat(2).Select(lst => lst.Sum()));
+            Demo("two dice", Random.Tuple(Random.Dice(6), Random.Dice(6)).Select(t => t.Item1 + t.Item2));
 
             // dice roles from the rules of Zombicide
             // Zomicide();

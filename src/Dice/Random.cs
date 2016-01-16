@@ -23,6 +23,11 @@ namespace Xof.RandomVariables
             return new _Random<int>(new[] { Probability(0, pHeads), Probability(1, 1 - pHeads) });
         }
 
+        public static IRandom<Tuple<T1,T2>> Tuple<T1,T2>(IRandom<T1> r1, IRandom<T2> r2)
+        {
+            return from v1 in r1 from v2 in r2 select System.Tuple.Create(v1, v2);
+        }
+
         #region combinators
 
         public static IRandom<T> Select<S, T>(this IRandom<S> source, Func<S, T> selector)
