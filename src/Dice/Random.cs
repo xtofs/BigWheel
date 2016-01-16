@@ -2,17 +2,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Statistics
+namespace Xof.RandomVariables
 {
+    using Number = System.Decimal;
+              
     static class Random
     {
         public static IRandom<int> Dice(int sides)
         {
+            return new _Random<int>(Enumerable.Range(1, sides).Select(i => Probability(i, (Number)1 / (Number)sides)));
         }
 
-        public static IRandom<int> Coin(double pZero = 0.5)
+        public static IRandom<int> Coin()
         {
-            return new _Random<int>(new[] { Probability(0, pZero), Probability(1, 1.0 - pZero) });
+            return Coin((Number)1 / (Number)2);
+        }
+
+        public static IRandom<int> Coin(Number pHeads)
+        {
+            return new _Random<int>(new[] { Probability(0, pHeads), Probability(1, 1 - pHeads) });
         }
 
         #region combinators
@@ -48,24 +56,29 @@ namespace Statistics
 
         #endregion
 
-        private static KeyValuePair<T, double> Probability<T>(T value, double probability)
+
+        private static KeyValuePair<T, Number> Probability<T>(T value, Number probability)
         {
-            return new KeyValuePair<T, double>(value, probability);
+            return new KeyValuePair<T, Number>(value, probability);
         }
 
-        private class _Random<T> : Dictionary<T, double>, IRandom<T>
+        private static Number Zero = 0;
+
+        private class _Random<T> : Dictionary<T, Number>, IRandom<T>
         {
-            private readonly List<double> intervals;
+            private readonly List<Number> intervals;
             private readonly List<T> items;
 
-            public _Random(IEnumerable<KeyValuePair<T, double>> enumerable) :
+            public _Random(IEnumerable<KeyValuePair<T, Number>> enumerable) :
                 base(GroupAndSum(enumerable))
             {
                 this.items = this.Select(p => p.Key).ToList();
-                this.intervals = this.Scan(0.0, (v, a) => a + v.Value).ToList();
+                this.intervals = this.Scan(Zero, (v, a) => a + v.Value).ToList();
+
+                System.Diagnostics.Debug.Assert(intervals.Last() - (Number)1 < 1E-10m);
             }
 
-            private static Dictionary<T, double> GroupAndSum(IEnumerable<KeyValuePair<T, double>> enumerable)
+            private static Dictionary<T, Number> GroupAndSum(IEnumerable<KeyValuePair<T, Number>> enumerable)
             {
                 return enumerable
                     .GroupBy(e => e.Key, e => e.Value)
@@ -76,7 +89,7 @@ namespace Statistics
             {
                 while (true)
                 {
-                    var d = rand.NextDouble();
+                    var d = (Number)rand.NextDouble();
                     int ix = intervals.BinarySearch(d);
                     ix = ix < 0 ? (~ix) : ix;
                     yield return items[ix];

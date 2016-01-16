@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace Statistics
+namespace Xof.RandomVariables
 {
     /// <summary>
     /// discrete random variable
     /// </summary>    
-    interface IRandom<T> : IDictionary<T, double>
+    interface IRandom<T> : IDictionary<T, decimal>
     {
         IEnumerable<T> Sample(System.Random rand);
     }

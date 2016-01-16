@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Statistics
+namespace Xof.RandomVariables
 {
+    using Number = System.Decimal;
+
     static class Extensions
     {
         public static IEnumerable<U> Scan<T, U>(this IEnumerable<T> source, U init, Func<T, U, U> selector)
@@ -16,14 +18,14 @@ namespace Statistics
             }
         }
 
-        public static double Product(this IEnumerable<double> source)
+        public static Number Product(this IEnumerable<Number> source)
         {
-            return source.Aggregate(1.0, (a, b) => a * b);
+            return source.Aggregate((Number)1, (a, b) => a * b);
         }
 
-        public static double Product<T>(this IEnumerable<T> source, Func<T, double> select)
+        public static Number Product<T>(this IEnumerable<T> source, Func<T, Number> select)
         {
-            return source.Aggregate(1.0, (a, b) => a * select(b));
+            return source.Aggregate((Number)1, (a, b) => a * select(b));
         }
 
         public static IEnumerable<IEnumerable<T>> Combinations<T>(this IEnumerable<T> items, int numDigits)
