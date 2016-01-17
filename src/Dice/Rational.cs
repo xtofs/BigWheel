@@ -158,7 +158,7 @@ namespace Xtof.RandomVariables
 
         public string ToString(IFormatProvider provider)
         {
-            return ((IConvertible)this.ToDecimal(provider)).ToString(provider);
+            return this.ToString();
         }
 
         public object ToType(Type conversionType, IFormatProvider provider)

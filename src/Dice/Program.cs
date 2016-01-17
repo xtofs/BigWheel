@@ -8,20 +8,6 @@ namespace Xtof.RandomVariables
         static void Main(string[] args)
         {
 
-            //Console.WriteLine(new Rational(1, 2) + new Rational(1, 3) );
-            //Console.WriteLine(new Rational(1, 2));
-            //Console.WriteLine(new Rational(-1, -2));
-            //Console.WriteLine(new Rational(1, -2));
-            //Console.WriteLine(new Rational(2, 4));
-            //Console.WriteLine(new Rational(-2, 4));
-            //Console.WriteLine(new Rational(1, -2) * new Rational(-1, -2));
-
-
-            //Console.WriteLine(Convert.ToDecimal(new Rational(1, 3)));
-            //Console.WriteLine(Convert.ChangeType(new Rational(1, 3), typeof(Double)));
-
-
-
 
             var twoDice0 = from a in Random.Dice(6) from b in Random.Dice(6) select a + b;
             var twoDice1 = Random.Dice(6).Repeat(2).Select(lst => lst.Sum());
