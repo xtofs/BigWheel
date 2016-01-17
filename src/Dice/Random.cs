@@ -64,29 +64,36 @@ namespace Xtof.RandomVariables
             return new KeyValuePair<TK, TV>(key, value);
         }
 
+        /// <summary>
+        /// concrete implementation of IRandom constructed from an IEnumerable<KeyValuePair<T, N>> 
+        /// if a key is occuring multiple times in the input, the final probability is the sum of values
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
         private class _Random<T> : ReadOnlyDictionary<T, Rational>, IRandom<T>
         {
-            private readonly List<Rational> intervals;
-            private readonly List<T> items;
-
             public _Random(IEnumerable<KeyValuePair<T, Rational>> enumerable) :
-                base(enumerable.ReduceToSum())
+              base(enumerable.ReduceToSum())
             {
-                this.items = this.Select(p => p.Key).ToList();
-                this.intervals = this.Scan((Rational)0, (v, a) => a + v.Value).ToList();
+                this._items = this.Select(p => p.Key).ToList();
+                this._intervals = this.Scan((Rational)0, (v, a) => a + v.Value).ToList();
 
                 // System.Diagnostics.Tracing. (intervals.Last() == (Rational)1);
             }
-
+            
+            // _intervals and _items are used in combination to create random samples 
+            // _intervals is used to do a binary search according to the distribution
+            // that index is then used to look up the item in _items.
+            private readonly List<Rational> _intervals;
+            private readonly List<T> _items;
          
             public IEnumerable<T> Sample(System.Random rand)
             {
                 while (true)
                 {
                     var d = (Rational)rand.NextDouble();
-                    int ix = intervals.BinarySearch(d);
+                    int ix = _intervals.BinarySearch(d);
                     ix = ix < 0 ? (~ix) : ix;
-                    yield return items[ix];
+                    yield return _items[ix];
                 }
             }
         }
