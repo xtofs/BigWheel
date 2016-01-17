@@ -7,8 +7,8 @@
     <ProjectGuid>{0BF470DB-29F8-4287-80DC-F8AB6D8E8B9F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BigWheel</RootNamespace>
-    <AssemblyName>BigWheel</AssemblyName>
+    <RootNamespace>Xtof.RandomVariables</RootNamespace>
+    <AssemblyName>Xtof.RandomVariables</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -41,14 +41,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions.cs" />
+    <Compile Include="EnumerableExtensions.cs" />
+    <Compile Include="EnumerableOfNumberExtensions.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EnumerableOfNumberExtensions.tt</DependentUpon>
+    </Compile>
     <Compile Include="IRandom.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Random.cs" />
+    <Compile Include="Rational.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="EnumerableOfNumberExtensions.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EnumerableOfNumberExtensions.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

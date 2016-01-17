@@ -1,26 +1,25 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace Xof.RandomVariables
-{
-    using Number = System.Decimal;
-              
+namespace Xtof.RandomVariables
+{                            
     static class Random
     {
         public static IRandom<int> Dice(int sides)
         {
-            return new _Random<int>(Enumerable.Range(1, sides).Select(i => Probability(i, (Number)1 / (Number)sides)));
+            return new _Random<int>(Enumerable.Range(1, sides).Select(i => KeyValuePair(i, (Rational)1 / (Rational)sides)));
         }
 
         public static IRandom<int> Coin()
         {
-            return Coin((Number)1 / (Number)2);
+            return Coin((Rational)1 / (Rational)2);
         }
 
-        public static IRandom<int> Coin(Number pHeads)
+        public static IRandom<int> Coin(Rational pHeads)
         {
-            return new _Random<int>(new[] { Probability(0, pHeads), Probability(1, 1 - pHeads) });
+            return new _Random<int>(new[] { KeyValuePair(0, pHeads), KeyValuePair(1, 1 - pHeads) });
         }
 
         public static IRandom<Tuple<T1,T2>> Tuple<T1,T2>(IRandom<T1> r1, IRandom<T2> r2)
@@ -34,7 +33,7 @@ namespace Xof.RandomVariables
         {
             var ts =
                 from s in source
-                select Probability(selector(s.Key), s.Value);
+                select KeyValuePair(selector(s.Key), s.Value);
 
             return new _Random<T>(ts);
         }
@@ -44,7 +43,7 @@ namespace Xof.RandomVariables
             var us =
                 from s in source
                 from t in second(s.Key)
-                select Probability(selector(s.Key, t.Key), s.Value * t.Value);
+                select KeyValuePair(selector(s.Key, t.Key), s.Value * t.Value);
 
             return new _Random<U>(us);
         }
@@ -53,48 +52,38 @@ namespace Xof.RandomVariables
         {
             var pps = source
                 .Combinations(n)
-                .Select(pa => Probability(
+                .Select(pa => KeyValuePair(
                     pa.Select(p => p.Key),
                     pa.Product(p => p.Value)));
             return new _Random<IEnumerable<T>>(pps);
+        }           
+        #endregion  
+
+        private static KeyValuePair<TK, TV> KeyValuePair<TK,TV>(TK key, TV value)
+        {
+            return new KeyValuePair<TK, TV>(key, value);
         }
 
-        #endregion
-
-
-        private static KeyValuePair<T, Number> Probability<T>(T value, Number probability)
+        private class _Random<T> : ReadOnlyDictionary<T, Rational>, IRandom<T>
         {
-            return new KeyValuePair<T, Number>(value, probability);
-        }
-
-        private static Number Zero = 0;
-
-        private class _Random<T> : Dictionary<T, Number>, IRandom<T>
-        {
-            private readonly List<Number> intervals;
+            private readonly List<Rational> intervals;
             private readonly List<T> items;
 
-            public _Random(IEnumerable<KeyValuePair<T, Number>> enumerable) :
-                base(GroupAndSum(enumerable))
+            public _Random(IEnumerable<KeyValuePair<T, Rational>> enumerable) :
+                base(enumerable.ReduceToSum())
             {
                 this.items = this.Select(p => p.Key).ToList();
-                this.intervals = this.Scan(Zero, (v, a) => a + v.Value).ToList();
+                this.intervals = this.Scan((Rational)0, (v, a) => a + v.Value).ToList();
 
-                System.Diagnostics.Debug.Assert(intervals.Last() - (Number)1 < 1E-10m);
+                // System.Diagnostics.Tracing. (intervals.Last() == (Rational)1);
             }
 
-            private static Dictionary<T, Number> GroupAndSum(IEnumerable<KeyValuePair<T, Number>> enumerable)
-            {
-                return enumerable
-                    .GroupBy(e => e.Key, e => e.Value)
-                    .ToDictionary(p => p.Key, p => p.Sum());
-            }
-
+         
             public IEnumerable<T> Sample(System.Random rand)
             {
                 while (true)
                 {
-                    var d = (Number)rand.NextDouble();
+                    var d = (Rational)rand.NextDouble();
                     int ix = intervals.BinarySearch(d);
                     ix = ix < 0 ? (~ix) : ix;
                     yield return items[ix];

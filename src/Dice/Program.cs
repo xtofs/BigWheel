@@ -1,19 +1,37 @@
 ﻿using System;
 using System.Linq;
 
-namespace Xof.RandomVariables
+namespace Xtof.RandomVariables
 {
     class Program
     {
         static void Main(string[] args)
         {
-            // Demo("two dice", Random.Dice(6).Repeat(2).Select(lst => lst.Sum()));
-            Demo("two dice", Random.Tuple(Random.Dice(6), Random.Dice(6)).Select(t => t.Item1 + t.Item2));
+
+            //Console.WriteLine(new Rational(1, 2) + new Rational(1, 3) );
+            //Console.WriteLine(new Rational(1, 2));
+            //Console.WriteLine(new Rational(-1, -2));
+            //Console.WriteLine(new Rational(1, -2));
+            //Console.WriteLine(new Rational(2, 4));
+            //Console.WriteLine(new Rational(-2, 4));
+            //Console.WriteLine(new Rational(1, -2) * new Rational(-1, -2));
+
+
+            //Console.WriteLine(Convert.ToDecimal(new Rational(1, 3)));
+            //Console.WriteLine(Convert.ChangeType(new Rational(1, 3), typeof(Double)));
+
+
+
+
+            var twoDice0 = from a in Random.Dice(6) from b in Random.Dice(6) select a + b;
+            var twoDice1 = Random.Dice(6).Repeat(2).Select(lst => lst.Sum());
+            var twoDice2 = Random.Tuple(Random.Dice(6), Random.Dice(6)).Select(t => t.Item1 + t.Item2);
+            Demo("two dice", twoDice0);
 
             // dice roles from the rules of Zombicide
-            // Zomicide();
+            Zomicide();
 
-            DnD();
+            //DnD();
         }
 
         private static void DnD()
@@ -70,23 +88,25 @@ namespace Xof.RandomVariables
             Console.WriteLine("# {0}", title);
             foreach (var outcome in random)
             {
-                Console.WriteLine("{0,4} {1,7:P2}", fmt(outcome.Key), outcome.Value);
+                Console.WriteLine("{0,4} {1,7:P2}   {2,7:P2}", fmt(outcome.Key), outcome.Value, (double)(outcome.Value));
             }
             Console.WriteLine();
 
             Console.WriteLine("# {0} samples", m);
             var result = random.Sample(rand).Take(m);
-            Console.WriteLine(result.Format(" ", "{0}", p => fmt(p)));
+            Console.WriteLine(result.Format(fmt));
             Console.WriteLine();
 
             Console.WriteLine("# frequency of {0} samples", n);
             var sample = random.Sample(rand).Take(n);
             var pairs = sample
                 .GroupBy(p => p)
-                .Select(p => new { p.Key, P = p.Count() / (double)n })
-                .OrderBy(p => p.P);
-            Console.WriteLine(pairs.Format(Environment.NewLine, "{0,4} {1,7:P2}", p => fmt(p.Key), p => p.P));
-            Console.WriteLine();
+                .Select(p => new { p.Key, Frequency = p.Count() / (decimal)n })
+                .OrderBy(p => p.Frequency);
+            foreach(var pair in pairs)
+            {
+                Console.WriteLine("{0,4} {1,7:P3}", fmt(pair.Key), pair.Frequency);
+            }
         }
     }
 }

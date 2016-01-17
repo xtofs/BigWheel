@@ -1,0 +1,40 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using System;
+using System.Collections.Generic;
+using System.Linq;                      
+
+namespace Xtof.RandomVariables
+{
+    static class EnumerableOfNumberExtensions
+    {
+<#      foreach(var typ in new[]{ "decimal", "double", "Rational" }) { #>
+        #region <#= typ #>
+        public static <#= typ #> Sum(this IEnumerable<<#= typ #>> source)
+        {
+            return source.Aggregate((<#= typ #>)0, (a, b) => a + b);
+        }
+
+        public static <#= typ #> Product(this IEnumerable<<#= typ #>> source)
+        {
+            return source.Aggregate((<#= typ #>)1, (a, b) => a * b);
+        }
+
+        public static <#= typ #> Product<T>(this IEnumerable<T> source, Func<T, <#= typ #>> select)
+        {
+            return source.Aggregate((<#= typ #>)1, (a, b) => a * select(b));
+        }
+
+        public static IDictionary<T, <#= typ #>> ReduceToSum<T>(this IEnumerable<KeyValuePair<T, <#= typ #>>> enumerable)
+        {
+            return enumerable.ReduceByKey(grp => grp.Sum());
+        }
+        #endregion
+
+<#      } #>
+    }
+}
