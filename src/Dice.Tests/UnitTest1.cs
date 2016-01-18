@@ -28,7 +28,9 @@ namespace Dice.Tests
         [Theory, MemberData("ConversionTestData")]
         public void ConversionTests(Rational data, decimal expected)
         {
-            var actual = Convert.ToDecimal(data);
+            // var actual = data.ToDecimal(null);
+            // var actual = Convert.ToDecimal((object)data);
+            var actual = (decimal)data;
             Assert.Equal(expected, actual);
         }
 

@@ -212,6 +212,11 @@ namespace Xtof.RandomVariables
             return (double)r.Numerator / (double)r.Denominator;
         }
 
+        public static implicit operator decimal(Rational r)
+        {
+            return (decimal)r.Numerator / (decimal)r.Denominator;
+        }
+
         public static implicit operator Rational(double value)
         {
             int n = 9;  // 2^10 ~= 10^3 , 2^32 ~= 10^9  
