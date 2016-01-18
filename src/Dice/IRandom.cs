@@ -15,5 +15,7 @@ namespace Xtof.RandomVariables
         /// </summary>
         /// <returns>infinite sequence of random picks</returns>
         IEnumerable<T> Sample(System.Random rand);
+
+        int NumBaseCases { get; }
     }
 }

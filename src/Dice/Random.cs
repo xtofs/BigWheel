@@ -79,9 +79,12 @@ namespace Xtof.RandomVariables
                 this._items = this.Select(p => p.Key).ToList();
                 this._intervals = this.Scan((Number)0, (v, a) => a + v.Value).ToList();
 
+                NumBaseCases = enumerable.Count();
                 // System.Diagnostics.Tracing. (intervals.Last() == (Rational)1);
             }
-            
+
+            public int NumBaseCases { get; }
+
             // _intervals and _items are used in combination to create random samples 
             // _intervals is used to do a binary search according to the distribution
             // that index is then used to look up the item in _items.

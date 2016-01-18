@@ -61,7 +61,7 @@ namespace Xtof.RandomVariables
                 from ds in Random.Dice(6).Repeat(3)
                 let hits = ds.Count(d => d >= 3)
                 select new { Hits = hits, Ones = Math.Min(hits, ds.Count(d => d == 1)) };
-            Demo("three dice 3+ with count of 1's", threeDiceThreePlusWithOnes, p => string.Format("{0} - {1}", p.Hits, p.Ones));
+            Demo("three dice 3+ with count of 1's", threeDiceThreePlusWithOnes, p => string.Format("{0}({1})", p.Hits, p.Ones));
         }
 
         private static System.Random rand = new System.Random();
@@ -72,9 +72,11 @@ namespace Xtof.RandomVariables
 
             Console.WriteLine("# ############################################################");
             Console.WriteLine("# {0}", title);
+            var b = random.NumBaseCases;
             foreach (var outcome in random)
             {
-                Console.WriteLine("{0,4} {1,8:P3}", fmt(outcome.Key), outcome.Value);
+                var q = string.Format("{0}/{1}", (int)(outcome.Value * b), b);
+                Console.WriteLine("{0,4} {1,8:P3}  {2,9}", fmt(outcome.Key), outcome.Value, q);
             }
             Console.WriteLine();
 
