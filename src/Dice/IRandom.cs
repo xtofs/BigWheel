@@ -3,24 +3,17 @@ using System.Collections.Generic;
 namespace Xtof.RandomVariables
 {
     /// <summary>
-    /// Discrete random variable with a immutable distribution for domain T
-    /// represented as a dictionary of Value -> Probability
-    /// Common instances created through factory methods of class Random.
+    /// Discrete random variable with a immutable distribution for domain T.
+    /// Represented as a dictionary of Value -> Probability
+    /// Instances created through factory methods and combinators of class Random
     /// </summary>    
-    interface IRandom<T,TR> : IReadOnlyDictionary<T, TR>, IReadOnlyCollection<KeyValuePair<T, TR>>
+    interface IRandom<T> : IReadOnlyDictionary<T, double>, IReadOnlyCollection<KeyValuePair<T, double>>
     {
         /// <summary>
-        /// 
+        /// produce an infinite sequence of random picks based on this random distribution
+        /// by drawing from given random number generator
         /// </summary>
-        /// <param name="rand"></param>
-        /// <returns>infinet sequence of random picks</returns>
+        /// <returns>infinite sequence of random picks</returns>
         IEnumerable<T> Sample(System.Random rand);
-    }
-
-    /// <summary>
-    /// discrete random variable with Rational propabilities
-    /// </summary>    
-    interface IRandom<T> : IRandom<T, Rational> 
-    {
     }
 }

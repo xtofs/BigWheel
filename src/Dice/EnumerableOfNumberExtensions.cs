@@ -1,56 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;                      
+using Xtof.Numeric;
 
 namespace Xtof.RandomVariables
 {
-    static class EnumerableOfNumberExtensions
-    {
-        #region decimal
-        public static decimal Sum(this IEnumerable<decimal> source)
+    static class EnumerableOfDecimalExtensions
+    {        
+        public static Decimal Sum(this IEnumerable<Decimal> source)
         {
-            return source.Aggregate((decimal)0, (a, b) => a + b);
+            return source.Aggregate((Decimal)0, (a, b) => a + b);
         }
 
-        public static decimal Product(this IEnumerable<decimal> source)
+        public static Decimal Product(this IEnumerable<Decimal> source)
         {
-            return source.Aggregate((decimal)1, (a, b) => a * b);
+            return source.Aggregate((Decimal)1, (a, b) => a * b);
         }
 
-        public static decimal Product<T>(this IEnumerable<T> source, Func<T, decimal> select)
+        public static Decimal Product<T>(this IEnumerable<T> source, Func<T, Decimal> select)
         {
-            return source.Aggregate((decimal)1, (a, b) => a * select(b));
+            return source.Aggregate((Decimal)1, (a, b) => a * select(b));
         }
 
-        public static IDictionary<T, decimal> ReduceToSum<T>(this IEnumerable<KeyValuePair<T, decimal>> enumerable)
-        {
-            return enumerable.ReduceByKey(grp => grp.Sum());
-        }
-        #endregion
-
-        #region double
-        public static double Sum(this IEnumerable<double> source)
-        {
-            return source.Aggregate((double)0, (a, b) => a + b);
-        }
-
-        public static double Product(this IEnumerable<double> source)
-        {
-            return source.Aggregate((double)1, (a, b) => a * b);
-        }
-
-        public static double Product<T>(this IEnumerable<T> source, Func<T, double> select)
-        {
-            return source.Aggregate((double)1, (a, b) => a * select(b));
-        }
-
-        public static IDictionary<T, double> ReduceToSum<T>(this IEnumerable<KeyValuePair<T, double>> enumerable)
+        public static IDictionary<T, Decimal> ReduceToSum<T>(this IEnumerable<KeyValuePair<T, Decimal>> enumerable)
         {
             return enumerable.ReduceByKey(grp => grp.Sum());
         }
-        #endregion
+    }
 
-        #region Rational
+    static class EnumerableOfDoubleExtensions
+    {        
+        public static Double Sum(this IEnumerable<Double> source)
+        {
+            return source.Aggregate((Double)0, (a, b) => a + b);
+        }
+
+        public static Double Product(this IEnumerable<Double> source)
+        {
+            return source.Aggregate((Double)1, (a, b) => a * b);
+        }
+
+        public static Double Product<T>(this IEnumerable<T> source, Func<T, Double> select)
+        {
+            return source.Aggregate((Double)1, (a, b) => a * select(b));
+        }
+
+        public static IDictionary<T, Double> ReduceToSum<T>(this IEnumerable<KeyValuePair<T, Double>> enumerable)
+        {
+            return enumerable.ReduceByKey(grp => grp.Sum());
+        }
+    }
+
+    static class EnumerableOfRationalExtensions
+    {        
         public static Rational Sum(this IEnumerable<Rational> source)
         {
             return source.Aggregate((Rational)0, (a, b) => a + b);
@@ -70,7 +72,6 @@ namespace Xtof.RandomVariables
         {
             return enumerable.ReduceByKey(grp => grp.Sum());
         }
-        #endregion
-
     }
+
 }

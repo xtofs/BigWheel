@@ -7,13 +7,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;                      
+using Xtof.Numeric;
 
 namespace Xtof.RandomVariables
 {
-    static class EnumerableOfNumberExtensions
-    {
-<#      foreach(var typ in new[]{ "decimal", "double", "Rational" }) { #>
-        #region <#= typ #>
+<#  foreach(var typ in new[]{ "Decimal", "Double", "Rational" }) { #>
+    static class EnumerableOf<#= typ #>Extensions
+    {        
         public static <#= typ #> Sum(this IEnumerable<<#= typ #>> source)
         {
             return source.Aggregate((<#= typ #>)0, (a, b) => a + b);
@@ -33,8 +33,7 @@ namespace Xtof.RandomVariables
         {
             return enumerable.ReduceByKey(grp => grp.Sum());
         }
-        #endregion
-
-<#      } #>
     }
+
+<#  } #>
 }

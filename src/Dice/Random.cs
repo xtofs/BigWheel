@@ -4,20 +4,22 @@ using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Xtof.RandomVariables
-{                            
+{
+    using Number = Double;
+
     static class Random
     {
         public static IRandom<int> Dice(int sides)
         {
-            return new _Random<int>(Enumerable.Range(1, sides).Select(i => KeyValuePair(i, (Rational)1 / (Rational)sides)));
+            return new _Random<int>(Enumerable.Range(1, sides).Select(i => KeyValuePair(i, (Number)1 / (Number)sides)));
         }
 
         public static IRandom<int> Coin()
         {
-            return Coin((Rational)1 / (Rational)2);
+            return Coin((Number)1 / (Number)2);
         }
 
-        public static IRandom<int> Coin(Rational pHeads)
+        public static IRandom<int> Coin(Number pHeads)
         {
             return new _Random<int>(new[] { KeyValuePair(0, pHeads), KeyValuePair(1, 1 - pHeads) });
         }
@@ -69,13 +71,13 @@ namespace Xtof.RandomVariables
         /// if a key is occuring multiple times in the input, the final probability is the sum of values
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        private class _Random<T> : ReadOnlyDictionary<T, Rational>, IRandom<T>
+        private class _Random<T> : ReadOnlyDictionary<T, Number>, IRandom<T>
         {
-            public _Random(IEnumerable<KeyValuePair<T, Rational>> enumerable) :
+            public _Random(IEnumerable<KeyValuePair<T, Number>> enumerable) :
               base(enumerable.ReduceToSum())
             {
                 this._items = this.Select(p => p.Key).ToList();
-                this._intervals = this.Scan((Rational)0, (v, a) => a + v.Value).ToList();
+                this._intervals = this.Scan((Number)0, (v, a) => a + v.Value).ToList();
 
                 // System.Diagnostics.Tracing. (intervals.Last() == (Rational)1);
             }
@@ -83,14 +85,14 @@ namespace Xtof.RandomVariables
             // _intervals and _items are used in combination to create random samples 
             // _intervals is used to do a binary search according to the distribution
             // that index is then used to look up the item in _items.
-            private readonly List<Rational> _intervals;
+            private readonly List<Number> _intervals;
             private readonly List<T> _items;
          
             public IEnumerable<T> Sample(System.Random rand)
             {
                 while (true)
                 {
-                    var d = (Rational)rand.NextDouble();
+                    var d = (Number)rand.NextDouble();
                     int ix = _intervals.BinarySearch(d);
                     ix = ix < 0 ? (~ix) : ix;
                     yield return _items[ix];

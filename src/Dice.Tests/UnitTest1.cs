@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Xtof.RandomVariables;
 using Xunit;
-
-namespace Dice.Tests
+                      
+namespace Xtof.Numeric.Tests
 {
     public class UnitTest1
     {

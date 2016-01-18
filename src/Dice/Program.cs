@@ -74,7 +74,7 @@ namespace Xtof.RandomVariables
             Console.WriteLine("# {0}", title);
             foreach (var outcome in random)
             {
-                Console.WriteLine("{0,4} {1,7:P2}   {2,7:P2}", fmt(outcome.Key), outcome.Value, (double)(outcome.Value));
+                Console.WriteLine("{0,4} {1,8:P3}", fmt(outcome.Key), outcome.Value);
             }
             Console.WriteLine();
 
@@ -91,8 +91,9 @@ namespace Xtof.RandomVariables
                 .OrderBy(p => p.Frequency);
             foreach(var pair in pairs)
             {
-                Console.WriteLine("{0,4} {1,7:P3}", fmt(pair.Key), pair.Frequency);
+                Console.WriteLine("{0,4} {1,8:P3}", fmt(pair.Key), pair.Frequency);
             }
+            Console.WriteLine();
         }
     }
 }
